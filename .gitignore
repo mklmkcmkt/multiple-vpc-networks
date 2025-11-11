@@ -1,0 +1,60 @@
+Git .gitignore File 
+
+
+# --- 1. Google Cloud Services ---
+# Explicitly ignore common key file names.
+*service-account*.json
+*credentials*.json
+key.json
+keys.json
+gcp-key.json
+*.p12
+.gemini/.env 
+
+# Google Cloud SDK (contains user tokens, ADC, and cached project info)
+.config/gcloud/
+
+# --- 2. Common Environment & Secret Files ---
+# Ignore all .env files (used to store secrets)
+.env
+.env.*
+
+# Contains API keys, service tokens, etc.
+.zsh_secrets
+
+
+
+
+
+# BUT, allow example files, which are safe to commit
+!*.env.example
+!*.env.sample
+
+# --- 3. Other Private Key Formats ---
+# Your .ssh/ rule is good. This catches keys not in that folder.
+*.pem
+*.key
+*.ssh/
+
+# --- 4. OS & IDE Clutter ---
+# This keeps the repo clean of system/editor files.
+# macOS
+.DS_Store
+.AppleDouble
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# IDE / Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- 5. Other Cloud Tooling Configs ---
+# Boto config (used by gsutil and AWS CLI)
+.boto
+
+# Gsutil cache/config (if not in the default .conf
+
