@@ -19,8 +19,7 @@ jobs:
       with:
         # This uses your Project Number.
         # The other values MUST be set as GitHub Secrets
-        workload_identity_provider: 'projects/1077101928379/locations/global/workloadIdentityPools/${{ secrets.WIF_POOL }}/providers/${{ secrets.WIF_PROVIDER }}'
-        service_account: '${{ secrets.GCP_SERVICE_ACCOUNT }}'
+        workload_identity_provider: 'projects/1077101928379/locations/global/workloadIdentityPools/${{ secrets.WIF_Pool }}/providers/${{ secrets.WIF_PROVIDER }}'
 
     - name: 'Fetch Current Asset Inventory'
       run: |
