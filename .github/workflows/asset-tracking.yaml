@@ -1,0 +1,38 @@
+name: Track Cloud Asset Inventory (Manual)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  track-inventory:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'write'
+      id-token: 'write'
+
+    steps:
+    - name: 'Checkout Repository'
+      uses: actions/checkout@v4
+
+    - name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v2'
+      with:
+        # This uses your Project Number.
+        # The other values MUST be set as GitHub Secrets
+        workload_identity_provider: 'projects/1077101928379/locations/global/workloadIdentityPools/${{ secrets.WIF_POOL }}/providers/${{ secrets.WIF_PROVIDER }}'
+        service_account: '${{ secrets.GCP_SERVICE_ACCOUNT }}'
+
+    - name: 'Fetch Current Asset Inventory'
+      run: |
+        # This uses your Project ID
+        gcloud asset list --project="qwiklabs-gcp-00-706c0b98ff95" \
+          --content-type="resource" \
+          --format="yaml" > current_assets.yaml
+
+    - name: 'Commit and Push Changes'
+      run: |
+        git config --global user.name 'Asset Bot'
+        git config --global user.email 'bot@github.com'
+        git add current_assets.yaml
+        git commit -m "Auto-update: Cloud Asset Inventory Snapshot" || exit 0
+        git push
