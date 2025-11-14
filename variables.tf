@@ -18,15 +18,15 @@ variable "zone_us" {
 }
 
 variable "region_eu" {
-    type = string
-    description = "European region for 'eu' resources"
-    default = "europe-west1"
-    
+  type        = string
+  description = "The 'eu' region."
+  default     = "europe-west1"
 }
 
 variable "zone_eu" {
-    type = string
-    description = "The zone for the 'eu' resources"
+  type        = string
+  description = "The 'eu' zone."
+  default     = "europe-west1-b"
 }
 
 variable "vm_machine_type" {

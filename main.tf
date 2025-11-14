@@ -58,7 +58,7 @@ resource "google_compute_firewall" "mynetwork_allow_combined" {
 # --- 2. Create 'managementnet' VPC and its resources ---
 
 resource "google_compute_network" "management" {
-    name = "management"
+    name = "managementnet"  # <-- Corrected name
     auto_create_subnetworks = false
     routing_mode = "REGIONAL"
 
@@ -236,8 +236,9 @@ resource "google_compute_instance" "privatenet_us_vm" {
 
 resource "google_compute_instance" "vm_appliance" {
   name         = "vm-appliance"
-  machine_type = var.vm_machine_type
+  machine_type = "e2-standard-4" # <-- Hardcode a larger machine
   zone         = var.zone_us
+# ...
 
   boot_disk {
     initialize_params {
