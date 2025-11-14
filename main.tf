@@ -28,7 +28,7 @@ resource "google_compute_network" "mynetwork" {
 
 data "google_compute_subnet" "mynetwork_us_subnet" {
     name = "mynetwork"
-    region = var.region
+    region = var.region_us
 
 # Explicitly depend on the network being created first
  depends_on = [google_compute_network.mynetwork]
@@ -67,7 +67,7 @@ resource "google_compute_network" "management" {
 resource "google_compute_subnet" "managementsubnet_us" {
     name = "managementsubnet-us"
     ip_cidr_range = "10.130.0.0/20"
-    region = var.region
+    region = var.region_us
     network = google_compute_network.management.id
 }
 
@@ -76,7 +76,7 @@ resource "google_compute_firewall" "management_allow" {
     network = google_compute_network.management.self_link
 
     allow{
-        protocol = "icpm"
+        protocol = "icmp"
     }
 
     allow{
@@ -101,8 +101,8 @@ resource "google_compute_network" "privatenet" {
 resource "google_compute_subnet" "privatesubnet_us" {
     name = "privatesubnet-us"
     ip_cidr_range = "172.16.0.0/24"
-    region = var.region
-    network = google_compute_subnet.privatenet.id
+    region = var.region_us
+    network = google_compute_network.privatenet.id
 }
 
 resource "google_compute_subnet" "privatesubnet_eu" {
