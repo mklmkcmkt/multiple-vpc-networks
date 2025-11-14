@@ -26,7 +26,7 @@ resource "google_compute_network" "mynetwork" {
 # Since our vm-appliance is being built in the "us" region, 
 # its NIC must connect to the mynetwork subnet that is also in a "us" region. 
 
-data "google_compute_subnet" "mynetwork_us_subnet" {
+data "google_compute_subnetwork" "mynetwork_us_subnet" {
     name = "mynetwork"
     region = var.region_us
 
@@ -64,7 +64,7 @@ resource "google_compute_network" "management" {
 
 }
 
-resource "google_compute_subnet" "managementsubnet_us" {
+resource "google_compute_subnetwork" "managementsubnet_us" {
     name = "managementsubnet-us"
     ip_cidr_range = "10.130.0.0/20"
     region = var.region_us
@@ -98,14 +98,14 @@ resource "google_compute_network" "privatenet" {
 
 }
 
-resource "google_compute_subnet" "privatesubnet_us" {
+resource "google_compute_subnetwork" "privatesubnet_us" {
     name = "privatesubnet-us"
     ip_cidr_range = "172.16.0.0/24"
     region = var.region_us
     network = google_compute_network.privatenet.id
 }
 
-resource "google_compute_subnet" "privatesubnet_eu" {
+resource "google_compute_subnetwork" "privatesubnet_eu" {
     name = "privatesubnet-eu"
     ip_cidr_range = "172.20.0.0/20"
     region = var.region_eu
@@ -141,7 +141,7 @@ resource "google_compute_instance" "mynet_us_vm" {
     # Attach to the auto-mode 'mynetwork'.
   # We can specify the subnet directly using our data source.
   network_interface {
-    subnetwork = data.google_compute_subnet.mynetwork_us_subnet.id
+    subnetwork = data.google_compute_subnetwork.mynetwork_us_subnet.id
 
     
     access_config {
@@ -195,7 +195,7 @@ resource "google_compute_instance" "management_us_vm" {
 
     # Management is a Single NIC nic0 (ens4) VM
     network_interface {
-      subnetwork = google_compute_subnet.managementsubnet_us.id
+      subnetwork = google_compute_subnetwork.managementsubnet_us.id
       access_config {
       // If empty, Google Cloud will then automatically assign an ephemeral external IP address to the VM from its available pool
 
@@ -221,7 +221,7 @@ resource "google_compute_instance" "privatenet_us_vm" {
 
   # This VM's single NIC nic0 (ens4) is in privatenet
   network_interface {
-    subnetwork = google_compute_subnet.privatesubnet_us.id
+    subnetwork = google_compute_subnetwork.privatesubnet_us.id
     access_config {
       // Empty block requests an external IP
     }
@@ -247,7 +247,7 @@ resource "google_compute_instance" "vm_appliance" {
 
   # nic0 (ens4) - Primary interface in 'privatenet'
   network_interface {
-    subnetwork = google_compute_subnet.privatesubnet_us.id
+    subnetwork = google_compute_subnetwork.privatesubnet_us.id
     access_config {
       // Empty block requests an external IP
     }
@@ -255,12 +255,12 @@ resource "google_compute_instance" "vm_appliance" {
 
   # nic1 (ens5) - Secondary interface in 'managementnet'
   network_interface {
-    subnetwork = google_compute_subnet.managementsubnet_us.id
+    subnetwork = google_compute_subnetwork.managementsubnet_us.id
   }
 
   # nic2 (ens6) - Secondary interface in 'mynetwork'
   network_interface {
-    subnetwork = data.google_compute_subnet.mynetwork_us_subnet.id
+    subnetwork = data.google_compute_subnetwork.mynetwork_us_subnet.id
   }
 
   metadata = {
